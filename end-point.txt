@@ -1,0 +1,41 @@
+post('/register-user')
+  
+   expectations get from Backend : 
+       if save user correctly status(201) => json({
+                        message: "User successfully created!",
+                        result: response
+                    })
+       if error status 500 => json(error : error)
+
+    expectations get from front : 
+      
+
+
+
+.........................................................................
+post('/signin')
+  expectations get from backend :
+       if (!user) {
+            return status(401).json({
+                message: "Authentication failed"
+            });
+        }
+       if status (200) : return (
+                json({
+                      access: jwtToken,
+                      expiresIn: 3600, 
+                      _id: getUser._id
+               })
+          )
+         
+ expectations get from front : 
+      
+
+
+
+.........................................................................
+// Get Single User for open profile if autherize 
+  get('user-profile/:id')
+       status(200).json({
+                msg: data
+            })

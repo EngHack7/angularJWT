@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
 })
 
 export class AuthService {
-  endpoint: string = 'http://localhost:4000/api';
+  endpoint: string = 'http://localhost:8000/api';
   headers = new HttpHeaders().set('Content-Type', 'application/json');
   currentUser = {};
 
@@ -22,7 +22,10 @@ export class AuthService {
 
   // Sign-up
   signUp(user: User): Observable<any> {
-    let api = `${this.endpoint}/register-user`;
+    console.log(user);
+    
+    
+    let api = `${this.endpoint}/register/`;
     return this.http.post(api, user)
       .pipe(
         catchError(this.handleError)
@@ -31,13 +34,15 @@ export class AuthService {
 
   // Sign-in
   signIn(user: User) {
-    return this.http.post<any>(`${this.endpoint}/signin`, user)
+    console.log('user = ',user)
+    return this.http.post<any>(`${this.endpoint}/login/`, user)
       .subscribe((res: any) => {
-        localStorage.setItem('access_token', res.token)
-        this.getUserProfile(res._id).subscribe((res) => {
-          this.currentUser = res;
-          this.router.navigate(['user-profile/' + res.msg._id]);
-        })
+        console.log('res : ',res)
+        localStorage.setItem('access_token', res.access)
+        this.getUserProfile(res.id).subscribe((res) => {
+          this.currentUser = res
+          this.router.navigate(['user-profile/' + res.msg.id]);
+        });console.log('res : ',res)
       })
   }
 
@@ -59,7 +64,7 @@ export class AuthService {
 
   // User profile
   getUserProfile(id): Observable<any> {
-    let api = `${this.endpoint}/user-profile/${id}`;
+    let api = `${this.endpoint}/user-profile/${id}`;  
     return this.http.get(api, { headers: this.headers }).pipe(
       map((res: Response) => {
         return res || {}
